@@ -1,0 +1,38 @@
+---
+title: "Getting Started"
+author: "Kaustav Sen"
+date: "18/09/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Walkthrough of Tom Mock's blogpost on gt - a (G)rammar of (T)ables
+
+Blog [link](https://themockup.blog/posts/2020-05-16-gt-a-grammer-of-tables/)
+
+
+```{r}
+library(gt) # for static tables
+library(tidyverse) # all the things
+library(paletteer) # for all the palettes
+
+playoff_salary <- read_csv("https://raw.githubusercontent.com/jthomasmock/radix_themockup/master/_posts/2020-05-13-qb-salaries-vs-playoff-appearances/playoff_salary.csv")
+```
+
+```{r}
+playoff_salary %>% glimpse()
+```
+
+```{r}
+playoff_salary %>% 
+  head() %>% 
+  gt()
+```
+
+
+
+
+
