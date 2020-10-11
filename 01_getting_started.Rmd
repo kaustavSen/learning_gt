@@ -32,7 +32,142 @@ playoff_salary %>%
   gt()
 ```
 
+```{r}
+library(scales)
+
+show_col(c("#ffffff", "#f2fbd2", "#c9ecb4", "#93d3ab", "#35b0ab"))
+```
 
 
+```{r}
+red_color_generator <- col_numeric(c("red", "white"), domain = NULL)
 
+red_color_generator(c(50, 100, 150, 200)) %>% show_col()
+```
 
+```{r}
+library(paletteer)
+
+complete_table <- 
+  playoff_salary %>% 
+  head() %>%
+  gt() %>% 
+  data_color(
+    columns = c("Total", "salary"),
+    colors = col_numeric(
+      palette = c("#ffffff", "#f2fbd2", "#c9ecb4", "#93d3ab", "#35b0ab"),
+      domain = NULL
+    )
+  ) %>% 
+  fmt_currency(
+    columns = "salary",
+    decimals = 1,
+    pattern = "{x} M"
+  ) %>% 
+  cols_align(
+    align = "right",
+    columns = "salary"
+  ) %>% 
+  tab_style(
+    style = list(
+      cell_borders(
+        sides = "left",
+        color = "black",
+        weight = px(3)
+      )
+    ),
+    location = list(
+      cells_body(
+        columns = "Total"
+      )
+    )
+  ) %>% 
+  tab_style(
+    style = list(
+      cell_borders(
+        sides = "bottom",
+        color = "black",
+        weight = px(3)
+      )
+    ),
+    location = list(
+      cells_column_labels(
+        columns = everything()
+      )
+    )
+  ) %>% 
+  cols_label(
+    player = "Player",
+    salary = "Salary"
+  ) %>% 
+  tab_source_note(html("<span style = 'color: grey; text-align: right'>TABLE: @THOMAS_MOCK | DATA: PRO FOOTBALL REFERENCE & OVER THE CAP<span/>")) %>% 
+  tab_header(
+    title = md("**2014 - 2019 Salary and Playoff Appearances**"),
+    subtitle = "QBS limited to playoff games where they threw a pass"
+  )
+```
+
+```{r}
+library(extrafont)
+# library(showtext)
+
+# font_add_google("Karla")
+# font_add_google("Fira Mono")
+
+extrafont::font_import(paths = here::here("fonts"))
+
+loadfonts(device = "win")
+
+# showtext_auto()
+
+complete_table %>% 
+  tab_style(
+    style = list(
+      cell_text(
+        font = "Fira Mono",
+        align = "center"
+      )
+    ),
+    locations = list(
+      cells_body(columns = 2:last_col()))
+  ) %>% 
+  tab_style(
+    style = list(
+      cell_text(font = "Fira Mono", weight = "bold")
+    ),
+    locations = list(
+      cells_column_labels(everything())
+    )
+  ) %>% 
+  tab_style(
+    style = list(
+      cell_text(font = "Fira Mono")
+    ),
+    locations = list(
+      cells_body(columns = "player")
+    )
+  ) %>% 
+  tab_style(
+    style = list(
+      cell_text(
+        font = "Cooper Black",
+        align = "left"
+      )
+    ),
+    locations = list(
+      cells_title(groups = "title")
+    )
+  ) %>% 
+  tab_style(
+    style = list(
+      cell_text(
+        font = "Karla",
+        align = "left"
+      )
+    ),
+    locations = list(
+      cells_title(groups = "subtitle")
+    )
+  ) %>% 
+  gtsave("getting_started.png", here::here("plots"))
+```
