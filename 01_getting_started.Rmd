@@ -116,7 +116,7 @@ library(extrafont)
 
 extrafont::font_import(paths = here::here("fonts"))
 
-loadfonts(device = "win")
+loadfonts(device = "pdf")
 
 # showtext_auto()
 
@@ -133,7 +133,7 @@ complete_table %>%
   ) %>% 
   tab_style(
     style = list(
-      cell_text(font = "Fira Mono", weight = "bold")
+      cell_text(font = "Segoe Print", weight = "bold")
     ),
     locations = list(
       cells_column_labels(everything())
@@ -141,7 +141,7 @@ complete_table %>%
   ) %>% 
   tab_style(
     style = list(
-      cell_text(font = "Fira Mono")
+      cell_text(font = "Consolas")
     ),
     locations = list(
       cells_body(columns = "player")
@@ -169,5 +169,5 @@ complete_table %>%
       cells_title(groups = "subtitle")
     )
   ) %>% 
-  gtsave("getting_started.png", here::here("plots"))
+  gtsave("getting_started.pdf", here::here("plots"))
 ```
