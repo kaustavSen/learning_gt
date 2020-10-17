@@ -18,6 +18,8 @@ Blog [link](https://themockup.blog/posts/2020-05-16-gt-a-grammer-of-tables/)
 library(gt) # for static tables
 library(tidyverse) # all the things
 library(paletteer) # for all the palettes
+library(scales)
+library(here)
 
 playoff_salary <- read_csv("https://raw.githubusercontent.com/jthomasmock/radix_themockup/master/_posts/2020-05-13-qb-salaries-vs-playoff-appearances/playoff_salary.csv")
 ```
@@ -27,30 +29,13 @@ playoff_salary %>% glimpse()
 ```
 
 ```{r}
-playoff_salary %>% 
-  head() %>% 
-  gt()
-```
-
-```{r}
-library(scales)
-
-show_col(c("#ffffff", "#f2fbd2", "#c9ecb4", "#93d3ab", "#35b0ab"))
-```
-
-
-```{r}
 red_color_generator <- col_numeric(c("red", "white"), domain = NULL)
-
-red_color_generator(c(50, 100, 150, 200)) %>% show_col()
 ```
 
 ```{r}
-library(paletteer)
-
 complete_table <- 
   playoff_salary %>% 
-  head() %>%
+  head(10) %>%
   gt() %>% 
   data_color(
     columns = c("Total", "salary"),
@@ -100,7 +85,7 @@ complete_table <-
     player = "Player",
     salary = "Salary"
   ) %>% 
-  tab_source_note(html("<span style = 'color: grey; text-align: right'>TABLE: @THOMAS_MOCK | DATA: PRO FOOTBALL REFERENCE & OVER THE CAP<span/>")) %>% 
+  tab_source_note(html("TABLE: @THOMAS_MOCK | DATA: PRO FOOTBALL REFERENCE & OVER THE CAP")) %>% 
   tab_header(
     title = md("**2014 - 2019 Salary and Playoff Appearances**"),
     subtitle = "QBS limited to playoff games where they threw a pass"
@@ -108,66 +93,34 @@ complete_table <-
 ```
 
 ```{r}
-library(extrafont)
-# library(showtext)
-
-# font_add_google("Karla")
-# font_add_google("Fira Mono")
-
-extrafont::font_import(paths = here::here("fonts"))
-
-loadfonts(device = "pdf")
-
-# showtext_auto()
-
 complete_table %>% 
   tab_style(
-    style = list(
-      cell_text(
-        font = "Fira Mono",
-        align = "center"
-      )
-    ),
+    style = cell_text(font = google_font("Fira Mono"), align = "center", color = "black"),
     locations = list(
       cells_body(columns = 2:last_col()))
   ) %>% 
   tab_style(
-    style = list(
-      cell_text(font = "Segoe Print", weight = "bold")
-    ),
+    style = cell_text(font = google_font("Karla"), weight = "bold", color = "black"),
     locations = list(
       cells_column_labels(everything())
     )
   ) %>% 
   tab_style(
-    style = list(
-      cell_text(font = "Consolas")
-    ),
+    style = cell_text(font = google_font("Karla"), align = "left", color = "grey"),
     locations = list(
-      cells_body(columns = "player")
+      cells_title(groups = c("subtitle"))
     )
   ) %>% 
   tab_style(
-    style = list(
-      cell_text(
-        font = "Cooper Black",
-        align = "left"
-      )
-    ),
+    style = cell_text(font = google_font("Karla"), align = "left", weight = "bold"),
     locations = list(
-      cells_title(groups = "title")
+      cells_title(groups = c("title"))
     )
   ) %>% 
-  tab_style(
-    style = list(
-      cell_text(
-        font = "Karla",
-        align = "left"
-      )
-    ),
-    locations = list(
-      cells_title(groups = "subtitle")
-    )
+  tab_options(
+    source_notes.font.size = 12,
+    table.font.names = "Karla",
+    table.align = "center"
   ) %>% 
-  gtsave("getting_started.pdf", here::here("plots"))
+  gtsave("01_getting_started.html", here("plots"))
 ```
